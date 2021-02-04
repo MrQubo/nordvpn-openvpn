@@ -3,6 +3,8 @@ It's broken, it's not removing tmp files, it's written in bash without even `set
 Good idea but poor execution. :/
 Fow now not interested in fixing this.
 
+Oh, great! The removal of package is also broken because it tries to download configuration files, which is broken because of outdated configuration file.
+
 nordvpn-openvpn
 =======
 
