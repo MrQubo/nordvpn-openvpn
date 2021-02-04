@@ -1,5 +1,8 @@
 #!/bin/bash
 
+set -o errexit -o pipefail -o nounset
+
+
 exit_msg() {
     (>&2 echo "$2")
     exit $1
@@ -84,7 +87,7 @@ update_files() {
         esac
     done
 
-    local remote_url=https://nordvpn.com/api/files/zipv2
+    local remote_url=https://downloads.nordcdn.com/configs/archives/servers/ovpn.zip
 
     local targetdir=/etc/openvpn/client/nordvpn-openvpn
     mkdir -p $targetdir
@@ -112,6 +115,8 @@ update_files() {
     then
         msg_exit 2 "unzip failed"
     fi
+    mv ovpn_*/* .
+    rmdir ovpn_*/
 
     echo "Patching and installing files..."
     test -f $targetdir/credentials.conf && cp $targetdir/credentials.conf .
