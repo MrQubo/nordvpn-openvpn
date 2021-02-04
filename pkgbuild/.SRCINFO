@@ -1,0 +1,31 @@
+pkgbase = nordvpn-openvpn
+	pkgdesc = OpenVPN helper script for nordvpn.com
+	pkgver = 0.1.43
+	pkgrel = 1
+	url = https://github.com/MrQubo/nordvpn-openvpn
+	install = nordvpn-openvpn.install
+	arch = any
+	license = MIT
+	makedepends = coreutils
+	makedepends = asciidoc
+	makedepends = git
+	depends = openvpn
+	depends = systemd
+	depends = openvpn-update-resolv-conf-git
+	depends = curl
+	depends = unzip
+	depends = sudo
+	depends = coreutils
+	depends = bc
+	depends = fping
+	optdepends = iputils: run ping and rank functions
+	optdepends = vpnfailsafe-git: use instead of update-resolv-conf if available
+	optdepends = python-pandas: run nordvpn-openvpn infos command
+	optdepends = bash-completion: auto-complete commands
+	optdepends = jq: pick recommended server for "start" command
+	provides = nordvpn-openvpn
+	source = git+https://github.com/MrQubo/nordvpn-openvpn.git
+	sha1sums = SKIP
+
+pkgname = nordvpn-openvpn
+
