@@ -1,3 +1,8 @@
+Note to self: This script sucks.
+It's broken, it's not removing tmp files, it's written in bash without even `set -o errexit`.
+Good idea but poor execution. :/
+Fow now not interested in fixing this.
+
 nordvpn-openvpn
 =======
 
