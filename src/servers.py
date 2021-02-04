@@ -122,10 +122,10 @@ if __name__ == "__main__":
         import pandas
     except:
         import sys
-        print("Can't import pandas. Please see 'man nordvpn'.", file=sys.stderr, flush=True)
+        print("Can't import pandas. Please see 'man nordvpn-openvpn'.", file=sys.stderr, flush=True)
         sys.exit(1)
 
-    parser = ArgumentParser(prog="nordvpn best")
+    parser = ArgumentParser(prog="nordvpn-openvpn best")
     parser.add_argument("servers_filename", help=SUPPRESS)
     parser.add_argument(
         "-f", "--force", action='store_true', default=False, help="Force download")  # just capture
@@ -169,7 +169,7 @@ if __name__ == "__main__":
     df = df[['name', 'country', 'flag', 'load', 'search_keywords', 'latitude', 'longitude', 'udp', 'tcp', 'xor_udp', 'xor_tcp', 'ikev2']]
 
     # Cross servers with the installed files
-    p1 = Popen(shlex.split('find /etc/openvpn/client/ -type l -name "nordvpn_*.conf"'), stdout=PIPE)
+    p1 = Popen(shlex.split('find /etc/openvpn/client/ -type l -name "nordvpn-openvpn_*.conf"'), stdout=PIPE)
     installed = set([os.path.splitext(os.path.basename(i).strip())[0].decode().split("_")[1] for i in p1.stdout.readlines()])
     available = df[df.name.apply(lambda x: x in installed)]
     if args.region is None:

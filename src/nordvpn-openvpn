@@ -6,7 +6,7 @@ exit_msg() {
 }
 
 get_service() {
-    systemctl --type=service --plain | grep openvpn-client@nordvpn | awk '{print $1}'
+    systemctl --type=service --plain | grep openvpn-client@nordvpn-openvpn | awk '{print $1}'
 }
 
 run_ping() {
@@ -37,7 +37,7 @@ ensure_infos() {
             shift
             ;;
     esac
-    declare -r servers_filename=/tmp/nordvpn_servers.json
+    declare -r servers_filename=/tmp/nordvpn-openvpn_servers.json
     if [ $force_update -eq 1 ] \
            || [ ! -f $servers_filename ] \
            || [ ! -z "$(find $servers_filename -mmin +15)" ]
@@ -51,21 +51,21 @@ ensure_infos() {
 
 run_servers() {
     which python3 1>/dev/null 2>&1 || exit_msg 1 "python3 and pandas are required."
-    timeout -v --signal=SIGINT 1m python3 /etc/openvpn/client/nordvpn/servers.py $@
+    timeout -v --signal=SIGINT 1m python3 /etc/openvpn/client/nordvpn-openvpn/servers.py $@
 }
 
 patch_config_file() {
     local -r f=$1
     local -r targetdir=$2
 
-    sed 's/^auth-user-pass.*$/auth-user-pass \/etc\/openvpn\/client\/nordvpn\/credentials.conf/g' -i $f
+    sed 's/^auth-user-pass.*$/auth-user-pass \/etc\/openvpn\/client\/nordvpn-openvpn\/credentials.conf/g' -i $f
     echo "" >> $f
     echo "script-security 2" >> $f
-    echo "up /etc/openvpn/client/nordvpn/updown" >> $f
-    echo "down /etc/openvpn/client/nordvpn/updown" >> $f
+    echo "up /etc/openvpn/client/nordvpn-openvpn/updown" >> $f
+    echo "down /etc/openvpn/client/nordvpn-openvpn/updown" >> $f
     install -D -m 444 $f $targetdir/conf/$(basename $f)
     local -a tok=($(basename $f | tr '.' ' '))
-    ln -s $targetdir/conf/$(basename $f) $targetdir/../nordvpn_${tok[0]}_${tok[3]:0:3}.conf
+    ln -s $targetdir/conf/$(basename $f) $targetdir/../nordvpn-openvpn_${tok[0]}_${tok[3]:0:3}.conf
 }
 
 update_files() {
@@ -86,7 +86,7 @@ update_files() {
 
     local remote_url=https://nordvpn.com/api/files/zipv2
 
-    local targetdir=/etc/openvpn/client/nordvpn
+    local targetdir=/etc/openvpn/client/nordvpn-openvpn
     mkdir -p $targetdir
 
     # local etag_file=$targetdir/etag
@@ -103,19 +103,19 @@ update_files() {
     cd $tmpdir
 
     echo "Downloading nordvpn config files..."
-    curl -sSL -o nordvpn.zip  $remote_url || exit 1
-    # if [ "$(md5sum nordvpn.zip | awk '{print $1}')" != "$etag" ]; then
-    #     exit_msg 1 "md5sum(nordvpn.zip) != $etag"
+    curl -sSL -o nordvpn-openvpn.zip  $remote_url || exit 1
+    # if [ "$(md5sum nordvpn-openvpn.zip | awk '{print $1}')" != "$etag" ]; then
+    #     exit_msg 1 "md5sum(nordvpn-openvpn.zip) != $etag"
     # fi
     mkdir conf
-    if ! unzip -q nordvpn.zip -d conf
+    if ! unzip -q nordvpn-openvpn.zip -d conf
     then
         msg_exit 2 "unzip failed"
     fi
 
     echo "Patching and installing files..."
     test -f $targetdir/credentials.conf && cp $targetdir/credentials.conf .
-    find /etc/openvpn/client -name 'nordvpn_*.conf' | xargs -r rm
+    find /etc/openvpn/client -name 'nordvpn-openvpn_*.conf' | xargs -r rm
     rm -rf $targetdir/conf && mkdir -p $targetdir/conf
 
     export -f patch_config_file
@@ -197,7 +197,7 @@ Available commands:
         -f, --force
             Force download even if the configuration files have not changed.
 
-For more details see nordvpn(8).
+For more details see nordvpn-openvpn(8).
 EOF
 }
 
@@ -241,11 +241,11 @@ fi
 
 if [ $(id -u) -ne 0 ]
 then
-    exit_msg 1 "'nordvpn $command' requires super-user privileges."
+    exit_msg 1 "'nordvpn-openvpn $command' requires super-user privileges."
 fi
 
 declare -r -i files_present=$(find /etc/openvpn/client -type f -name "*.nordvpn.com.*.ovpn" | wc -l)
-declare -r -i up_to_date=1 #$(find /etc/openvpn/client/nordvpn -type f -name etag -mmin -$((2 * 24 * 60)) | wc -l)
+declare -r -i up_to_date=1 #$(find /etc/openvpn/client/nordvpn-openvpn -type f -name etag -mmin -$((2 * 24 * 60)) | wc -l)
 
 if [ $files_present -eq 0 ] || ( [ $command != 'status' ] && [ $up_to_date -eq 0 ] )
 then
@@ -255,7 +255,7 @@ fi
 
 case $command in
     list)
-        find /etc/openvpn/client/ -type l -name "nordvpn_*${1}*.conf" \
+        find /etc/openvpn/client/ -type l -name "nordvpn-openvpn_*${1}*.conf" \
             | cut -d _ -f 2 \
             | cut -d . -f 1 \
             | sort -g
@@ -281,7 +281,7 @@ case $command in
         esac
         ;;
     ping)
-        file="/etc/openvpn/client/nordvpn_${1}_udp.conf"
+        file="/etc/openvpn/client/nordvpn-openvpn_${1}_udp.conf"
         if [ ! -f "$file" ]
         then
             exit_msg 1 "Can't find $file"
@@ -289,7 +289,7 @@ case $command in
         run_ping $file
         ;;
     rank)
-        files=$(find /etc/openvpn/client/ -type l -name "nordvpn_*${1}*_udp.conf" | cut -d _ -f 2)
+        files=$(find /etc/openvpn/client/ -type l -name "nordvpn-openvpn_*${1}*_udp.conf" | cut -d _ -f 2)
         bin=$(which fping)
         test $? -eq 0 || echo "fping not found, please install"
         tmp_stdout=$(mktemp)
@@ -307,7 +307,7 @@ case $command in
         esac
 
         service=$(get_service)
-        updown=/etc/openvpn/client/nordvpn/updown
+        updown=/etc/openvpn/client/nordvpn-openvpn/updown
         test -z "$service" || $0 stop
         if [ -x /etc/openvpn/vpnfailsafe.sh ]; then
             ln -fs /etc/openvpn/vpnfailsafe.sh $updown
@@ -324,15 +324,15 @@ case $command in
             test -z "$server" && exit_msg 1 "Can't find recommended server."
         fi
 
-        test -f /etc/openvpn/client/nordvpn_${server}_${conn_type}.conf \
+        test -f /etc/openvpn/client/nordvpn-openvpn_${server}_${conn_type}.conf \
              || exit_msg 1 "'${1}' is not a valid nordvpn server. Exiting."
 
-        systemctl $command openvpn-client@nordvpn_${server}_${conn_type}
+        systemctl $command openvpn-client@nordvpn-openvpn_${server}_${conn_type}
         ;;
     stop|restart)
         service=$(get_service)
         if [[ $command = "stop" \
-                 && $(readlink -f /etc/openvpn/client/nordvpn/updown) = "/etc/openvpn/vpnfailsafe.sh" ]]
+                 && $(readlink -f /etc/openvpn/client/nordvpn-openvpn/updown) = "/etc/openvpn/vpnfailsafe.sh" ]]
         then
             test -z "$service" || systemctl $command $service
             case "$1" in

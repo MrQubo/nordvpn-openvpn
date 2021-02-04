@@ -6,38 +6,38 @@
 
 == NAME
 
-nordvpn - utility to use nordvpn.com with openvpn and systemd.
+nordvpn-openvpn - utility to use nordvpn.com with openvpn and systemd.
 
 == SYNOPSIS
 
 // FIXME: since all lines below are different paragraphs it will add empty lines.
 // We just want line breaks but I couldn't make it work.
 
-*nordvpn* [-v, --verbose] [-h, --help]
+*nordvpn-openvpn* [-v, --verbose] [-h, --help]
 
-*nordvpn* [-v, --verbose] *start* [-t, --tcp] [_server_name_]
+*nordvpn-openvpn* [-v, --verbose] *start* [-t, --tcp] [_server_name_]
 
-*nordvpn* [-v, --verbose] *stop* [-r, --reset]
+*nordvpn-openvpn* [-v, --verbose] *stop* [-r, --reset]
 
-*nordvpn* [-v, --verbose] *restart*
+*nordvpn-openvpn* [-v, --verbose] *restart*
 
-*nordvpn* [-v, --verbose] *status*
+*nordvpn-openvpn* [-v, --verbose] *status*
 
-*nordvpn* [-v, --verbose] *update* [-f, --force]
+*nordvpn-openvpn* [-v, --verbose] *update* [-f, --force]
 
-*nordvpn* [-v, --verbose] *ping* _server_name_
+*nordvpn-openvpn* [-v, --verbose] *ping* _server_name_
 
-*nordvpn* [-v, --verbose] *list* [_server_pattern_]
+*nordvpn-openvpn* [-v, --verbose] *list* [_server_pattern_]
 
-*nordvpn* [-v, --verbose] *infos* [-f, --force]
+*nordvpn-openvpn* [-v, --verbose] *infos* [-f, --force]
 
-*nordvpn* [-v, --verbose] *rank* [_server_pattern_]
+*nordvpn-openvpn* [-v, --verbose] *rank* [_server_pattern_]
 
-*nordvpn* [-v, --verbose] *best* [_options_]
+*nordvpn-openvpn* [-v, --verbose] *best* [_options_]
 
 == DESCRIPTION
 
-*nordvpn* is a helper script to manage _openvpn_ connections to the subscription-based VPN service <https://www.nordvpn.com> from which it downloads the configuration files.
+*nordvpn-openvpn* is a helper script to manage _openvpn_ connections to the subscription-based VPN service <https://www.nordvpn.com> from which it downloads the configuration files.
 Once files are present and credentials are set up (see *FILES* below), it can start, stop, restart and show the status of the systemd running service.
 Note that except for *status*, all the commands require super-user privileges.
 
@@ -57,7 +57,7 @@ Note that except for *status*, all the commands require super-user privileges.
 
 *list* [_server_pattern_]:: Show all available servers matching _server_pattern_.
 
-*infos* [*-f*, *--force*]:: Show all available servers currently configured with additional information like current load, location and features. It will store data in /tmp/nordvpn_servers.json. The file is automatically updated after 15 minutes; option [*-f*, *--force*] forces the download. Requires *python3* and the *pandas* package.
+*infos* [*-f*, *--force*]:: Show all available servers currently configured with additional information like current load, location and features. It will store data in /tmp/nordvpn-openvpn_servers.json. The file is automatically updated after 15 minutes; option [*-f*, *--force*] forces the download. Requires *python3* and the *pandas* package.
 
 *rank* [_server_pattern_]:: ping and sort all servers matching _server_pattern_. See _ping_ above.
 
@@ -88,13 +88,13 @@ Note that except for *status*, all the commands require super-user privileges.
 
 == FILES
 
-_/etc/openvpn/client/nordvpn/credentials.conf_:: Credentials of nordvpn.com subscription. Login on the first line and password on the second.
+_/etc/openvpn/client/nordvpn-openvpn/credentials.conf_:: Credentials of nordvpn.com subscription. Login on the first line and password on the second.
 
-_/tmp/nordvpn_servers.json_:: Servers list downloaded from https://api.nordvpn.com/server and used by **nordvpn infos** and **nordvpn best**.
+_/tmp/nordvpn-openvpn_servers.json_:: Servers list downloaded from https://api.nordvpn.com/server and used by **nordvpn-openvpn infos** and **nordvpn-openvpn best**.
 
 == BUGS
 
-Please report any bug or feature request to GitHub Issues: <https://github.com/nstinus/nordvpn/issues>.
+Please report any bug or feature request to GitHub Issues: <https://github.com/MrQubo/nordvpn-openvpn/issues>.
 
 == AUTHORS
 

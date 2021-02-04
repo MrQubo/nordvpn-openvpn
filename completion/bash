@@ -1,4 +1,4 @@
-_nordvpn() {
+_nordvpn-openvpn() {
     local -r cur="${COMP_WORDS[COMP_CWORD]}"
     local -r prev="${COMP_WORDS[COMP_CWORD-1]}"
 
@@ -27,7 +27,7 @@ _nordvpn() {
         then
             local -r conn_type=$([[ $prev =~ -t|--tcp ]] && echo 'tcp' || echo 'udp')
             local -r pattern=$([[ $cur =~ start|ping ]] && echo '' || echo $cur)
-            local -r servers=$(sudo find /etc/openvpn/client/ -maxdepth 1 -name "nordvpn_*${pattern}*_${conn_type}.conf" \
+            local -r servers=$(sudo find /etc/openvpn/client/ -maxdepth 1 -name "nordvpn-openvpn_*${pattern}*_${conn_type}.conf" \
                                    | xargs -n1 basename \
                                    | cut -d _ -f 2 \
                                    | sort \
@@ -45,4 +45,4 @@ _nordvpn() {
     COMPREPLY=()
 }
 
-complete -F _nordvpn nordvpn
+complete -F _nordvpn-openvpn nordvpn-openvpn

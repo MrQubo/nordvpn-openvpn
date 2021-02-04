@@ -1,10 +1,13 @@
-Nordvpn
+nordvpn-openvpn
 =======
+
+This is a fork of https://github.com/nstinus/nordvpn. It renames `nordvpn` to
+`nordvpn-openvpn` so it can be installed alongside the `nordvpn-bin` AUR package.
 
 Introduction
 ------------
 
-`nordvpn` is a command line helper script to use nordvpn.com for
+`nordvpn-openvpn` is a command line helper script to use nordvpn.com for
 systems with `openvpn` and `systemd`.
 It was created for Arch Linux but should run without too much
 difficulty on systems that satisfy the following dependency list:
@@ -18,11 +21,11 @@ difficulty on systems that satisfy the following dependency list:
 Quickstart
 ----------
 
-- Once installed, run `sudo nordvpn update` to download and install the
+- Once installed, run `sudo nordvpn-openvpn update` to download and install the
 configuration files.
-- Edit `/etc/openvpn/client/nordvpn/credentials.conf`.
-- Run `sudo nordvpn list` to choose a server (alternatively the `rank`
+- Edit `/etc/openvpn/client/nordvpn-openvpn/credentials.conf`.
+- Run `sudo nordvpn-openvpn list` to choose a server (alternatively the `rank`
 command pings the servers).
-- Finally `sudo nordvpn start <servername>`.
+- Finally `sudo nordvpn-openvpn start <servername>`.
 - The status command shows you the status of the systemd service.
-- See `sudo nordvpn -h` for more information.
+- See `sudo nordvpn-openvpn -h` for more information.
